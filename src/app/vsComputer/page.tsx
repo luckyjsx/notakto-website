@@ -44,7 +44,7 @@ const Game = () => {
     const [isSkipping, setIsSkipping] = useState<boolean>(false);
     const [isUpdatingConfig, setIsUpdatingConfig] = useState<boolean>(false);
     const [isUpdatingDifficulty, setIsUpdatingDifficulty] = useState<boolean>(false);
-    const [showConfirmationModal, setshowConfirmationModal] = useState<boolean>(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
     const [showMenuConfirmation, setShowMenuConfirmation] = useState<boolean>(false);
 
     const { sfxMute } = useSound();
@@ -318,14 +318,14 @@ const Game = () => {
             {isMenuOpen && (
                 <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-60 z-[9999] flex items-center justify-center px-4 overflow-y-auto">
                     <div className="flex flex-wrap justify-center gap-4 max-w-4xl py-8">
-                        <SettingButton onClick={() => { setshowConfirmationModal(true); setIsMenuOpen(false) }} disabled={isResetting} loading={isResetting}>Reset</SettingButton>
+                        <SettingButton onClick={() => { setShowConfirmationModal(true); setIsMenuOpen(false) }} disabled={isResetting} loading={isResetting}>Reset</SettingButton>
                         <SettingButton onClick={() => { setShowBoardConfig(true); setIsMenuOpen(false); }} disabled={isUpdatingConfig}>Game Configuration</SettingButton>
                         <SettingButton onClick={() => { handleUndo(); setIsMenuOpen(false); }} disabled={Coins < 100 || isUndoing} loading={isUndoing}>Undo (100 coins)</SettingButton>
                         <SettingButton onClick={() => { handleSkip(); setIsMenuOpen(false); }} disabled={Coins < 200 || isSkipping} loading={isSkipping}>Skip a Move (200 coins)</SettingButton>
                         <SettingButton onClick={() => handleBuyCoins(setIsProcessingPayment, canShowToast, triggerToastCooldown, resetCooldown, setCoins, Coins)} disabled={isProcessingPayment} loading={isProcessingPayment}>Buy Coins (100)</SettingButton>
                         <SettingButton onClick={() => { setShowDifficultyModal(true); setIsMenuOpen(false); }}>AI Level: {difficulty}</SettingButton>
                         <SettingButton onClick={() => { setShowSoundConfig(true); setIsMenuOpen(false) }}>Adjust Sound</SettingButton>
-                        <SettingButton onClick={() => {setShowMenuConfirmation(true);setIsMenuOpen(false);}}>Main Menu</SettingButton>
+                        <SettingButton onClick={() => { setShowMenuConfirmation(true); setIsMenuOpen(false); }}>Main Menu</SettingButton>
                         <SettingButton onClick={toggleMenu}>Return to Game</SettingButton>
                     </div>
                 </div>
@@ -365,12 +365,12 @@ const Game = () => {
                 cancelText="Cancel"
                 title="Confirm Reset"
                 message="Are you sure you want to reset the game?"
-                onConfirm={() => {
-                    handleReset();
-                    setshowConfirmationModal(false);
+                onConfirm={async () => {
+                    await handleReset();
+                    setShowConfirmationModal(false);
                 }}
                 onCancel={() => {
-                    setshowConfirmationModal(false);
+                    setShowConfirmationModal(false);
                     setIsMenuOpen(true)
                 }}
             />
@@ -382,7 +382,7 @@ const Game = () => {
                 message="Are you sure you want to leave the game and return to the main menu?"
                 onConfirm={() => {
                     setShowMenuConfirmation(false);
-                    router.push("/"); // 👈 navigate home
+                    router.push("/");
                 }}
                 onCancel={() => {
                     setShowMenuConfirmation(false);

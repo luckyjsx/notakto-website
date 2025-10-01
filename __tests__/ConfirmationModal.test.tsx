@@ -2,7 +2,7 @@
 import React from "react";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
-import { ConfirmationModal } from "../src/modals/ConfirmationModal";
+import { ConfirmationModal } from "@/modals/ConfirmationModal";
 
 
 vi.mock("@/components/ui/Buttons/DifficultyActionButton", () => ({
@@ -110,4 +110,24 @@ describe("ConfirmationModal", () => {
     expect(dialog).toHaveAttribute("aria-labelledby", "confirmation-title");
     expect(dialog).toHaveAttribute("aria-describedby", "confirmation-message");
   });
+
+  it("locks body scroll when visible", () => {
+  const { rerender } = render(
+    <ConfirmationModal
+      visible={true}
+      onConfirm={() => {}}
+      onCancel={() => {}}
+    />
+  );
+  expect(document.body.style.overflow).toBe("hidden");
+  
+  rerender(
+    <ConfirmationModal
+      visible={false}
+      onConfirm={() => {}}
+      onCancel={() => {}}
+    />
+  );
+  expect(document.body.style.overflow).toBe("auto");
+});
 });

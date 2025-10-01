@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
 import { DifficultyActionButton } from "@/components/ui/Buttons/DifficultyActionButton";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface ConfirmationModalProps {
   visible: boolean;
@@ -26,7 +25,12 @@ export function ConfirmationModal({
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.body.style.overflow = visible ? "hidden" : "auto";
+    if (visible) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "auto";
+      };
+    }
   }, [visible]);
 
   // Auto-focus modal when opened
@@ -36,6 +40,19 @@ export function ConfirmationModal({
     }
   }, [visible]);
 
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && visible) {
+        onCancel();
+      }
+    };
+    if (visible) {
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [visible, onCancel]);
+
   if (!visible) return null;
 
   return (
@@ -43,8 +60,8 @@ export function ConfirmationModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="confirmation-title"
-      aria-describedby="confirmation-message"
+      {...(title && { "aria-labelledby": "confirmation-title" })}
+      {...(message && { "aria-describedby": "confirmation-message" })}
     >
       <div
         ref={modalRef}
