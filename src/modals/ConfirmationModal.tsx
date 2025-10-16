@@ -1,7 +1,7 @@
 "use client";
 
 import { DifficultyActionButton } from "@/components/ui/Buttons/DifficultyActionButton";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 
 interface ConfirmationModalProps {
   visible: boolean;
@@ -23,6 +23,8 @@ export function ConfirmationModal({
   onCancel,
 }: ConfirmationModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+   const titleId = useId();
+   const messageId = useId();
 
   useEffect(() => {
     if (visible) {
@@ -60,8 +62,8 @@ export function ConfirmationModal({
       className="fixed inset-0 bg-black/80 flex justify-center items-center z-50"
       role="dialog"
       aria-modal="true"
-      {...(title && { "aria-labelledby": "confirmation-title" })}
-      {...(message && { "aria-describedby": "confirmation-message" })}
+      {...(title && { "aria-labelledby": titleId })}
+      {...(message && { "aria-describedby": messageId })}
     >
       <div
         ref={modalRef}
@@ -70,7 +72,7 @@ export function ConfirmationModal({
       >
         {title && (
           <h2
-            id="confirmation-title"
+             id={titleId}
             className="text-red-500 text-[32px] font-bold"
           >
             {title}
@@ -78,7 +80,7 @@ export function ConfirmationModal({
         )}
         {message && (
           <p
-            id="confirmation-message"
+            id={messageId}
             className="text-gray-300 text-xl leading-relaxed"
           >
             {message}
